@@ -1,3 +1,7 @@
+variable "route53_zone_id" {
+  default = ""
+}
+
 variable "internal" {
   default = "false"
 }

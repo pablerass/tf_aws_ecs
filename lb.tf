@@ -59,3 +59,17 @@ resource "aws_security_group_rule" "ecs_lb_ingress" {
   cidr_blocks       = ["0.0.0.0/0"]
   security_group_id = "${aws_security_group.ecs_lb.id}"
 }
+
+resource "aws_route53_record" "ecs_lb" {
+  count   = "${var.route53_zone_id == "" ? 0 : 1}"
+
+  zone_id = "${var.route53_zone_id}"
+  name    = "ecs-${var.cluster}"
+  type    = "A"
+
+  alias {
+    name = "${aws_alb.ecs.dns_name}"
+    zone_id = "${aws_alb.ecs.zone_id}"
+    evaluate_target_health = false
+  }
+}
